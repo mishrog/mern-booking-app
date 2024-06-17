@@ -6,7 +6,16 @@ import cookieParser from "cookie-parser";
 
 import userRoutes from "./routes/users.routes";
 import authRoutes from "./routes/auth.routes";
+import myhotelRoutes from "./routes/my-hotels.routes";
 import path from "path";
+
+import { v2 as cloudinary } from "cloudinary"; // v2 cloudinary SDK
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 mongoose.connect(process.env.MONGO_DB_URI as string); // cast it as a string so that it doesn't cause problem if the uri is undefined
 
@@ -33,6 +42,11 @@ app.use(express.static(path.join(__dirname, "../../frontend/dist"))); // go to t
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/my-hotels", myhotelRoutes);
+
+app.get("*", (req: Request, res: Response) => { // catch all route
+  res.sendFile(path.join(__dirname, "../../frontend/dist/index.html")); // let react router handle these files
+});
 
 app.listen(7000, () => {
   console.log("Server running on localhost 7000");
