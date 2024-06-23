@@ -205,7 +205,9 @@ export const createPaymentIntent = async (
   return response.json();
 };
 
-export const createRoomBooking = async (formData: BookingFormData & { hotelId: string; paymentIntentId: string }) => {
+export const createRoomBooking = async (
+  formData: BookingFormData & { hotelId: string; paymentIntentId: string }
+) => {
   console.log("FormData:", formData); // Add this line for debugging
   const response = await fetch(
     `${API_BASE_URL}/api/hotels/${formData.hotelId}/bookings`,
@@ -226,3 +228,14 @@ export const createRoomBooking = async (formData: BookingFormData & { hotelId: s
   }
 };
 
+export const fetchMyBookings = async (): Promise<HotelType[]> => {
+  const response = await fetch(`${API_BASE_URL}/api/my-bookings`, {
+    credentials: "include",
+  });
+
+  if (!response.ok) throw new Error("Unable to fetch bookings");
+
+  return response.json();
+
+
+};
